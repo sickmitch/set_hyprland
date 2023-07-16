@@ -84,6 +84,7 @@ install_stage=(
 	bat
 	catppuccin-cursors-mocha
 	catppuccin-gtk-theme-mocha
+	papirus-folders-catppuccin-git
 )
 
 for str in ${myArray[@]}; do
