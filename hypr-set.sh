@@ -67,6 +67,7 @@ install_stage=(
 	bluez
 	bluez-utils
 	blueman
+	autojump
 	network-manager-applet
 	gvfs
 	thunar-archive-plugin
@@ -271,15 +272,6 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
 fi
 
-read -n1 -rep 'Would you like to enable SDDM autologin? (y,n)' SDDM
-if [[ $SDDM == "Y" || $SDDM == "y" ]]; then
-	LOC="/etc/sddm.conf"
-	echo -e "The following has been added to $LOC.\n"
-	echo -e "[Autologin]\nUser = $(whoami)\nSession=hyprland" | sudo tee -a $LOC
-	echo -e "\n"
-	echo -e "Enabling SDDM service...\n"
-	sudo systemctl enable sddm
-	sleep 3
-fi
+echo -en "Remember to setup systemd autologin!\n"
 
 echo -en "Visit https://github.com/abba23/spotify-adblock\n"
