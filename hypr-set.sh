@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# HyprV3 By SolDoesTech - https://www.youtube.com/@SolDoesTech
-# License..? - You may copy, edit and ditribute this script any way you like, enjoy! :)
-
-# The follwoing will attempt to install all needed packages to run Hyprland
-# This is a quick and dirty script there are some error checking
 # IMPORTANT - This script is meant to run on a clean fresh Arch install on physical hardware
 
 # Define the software that would be inbstalled
@@ -43,7 +38,7 @@ install_stage=(
 	tldr
 	udiskie
 	kitty
-	mako
+	dunst
 	waybar-hyprland-git
 	swww
 	wofi
@@ -76,7 +71,6 @@ install_stage=(
 	papirus-icon-theme
 	ttf-jetbrains-mono-nerd
 	noto-fonts-emoji
-	lxappearance
 	xfce4-settings
 	nwg-look-bin
 	pulseaudio
