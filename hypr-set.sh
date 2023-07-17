@@ -21,6 +21,7 @@ prep_stage=(
 	pacman-contrib
 	tlp
 	plocate
+	xorg-xhost
 )
 
 #software for nvidia GPU only
@@ -35,6 +36,7 @@ nvidia_stage=(
 #the main packages
 install_stage=(
 	neofetch
+	swaylock-effects-git
 	tldr
 	udiskie
 	kitty
