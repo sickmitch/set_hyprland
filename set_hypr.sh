@@ -22,6 +22,8 @@ prep_stage=(
 	tlp
 	plocate
 	xorg-xhost
+	pulseaudio
+	pulseaudio-bluetooth
 )
 
 #software for nvidia GPU only
@@ -35,6 +37,7 @@ nvidia_stage=(
 
 #the main packages
 install_stage=(
+	hyprpaper
 	neofetch
 	swaylock-effects-git
 	tldr
@@ -42,8 +45,6 @@ install_stage=(
 	kitty
 	dunst
 	waybar-hyprland-git
-	swww
-	wofi
 	wlogout
 	webapp-manager
 	xdg-desktop-portal-hyprland
@@ -75,8 +76,6 @@ install_stage=(
 	noto-fonts-emoji
 	xfce4-settings
 	nwg-look-bin
-	pulseaudio
-	pulseaudio-bluetooth
 	vlc
 	bat
 	catppuccin-cursors-mocha
@@ -266,8 +265,48 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Clean out other portals
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
+
+  ##-------------------------------------------------------------------------------------------------------------------##
+	
+  #Set pulseaudio
+	echo -en "$CNT - Configuering pulseaudio."
+	systemctl --user enable pulseaudio
+	sleep 2
+	systemctl --user enable pulseaudio.socket
+	sleep 2
+	cd $HOME/.config/systemd/user/default.target.wants/
+	ln -s /usr/lib/systemd/user/pulseaudio.service .
+	cd $HOME/.config/systemd/user/sockets.target.wants/
+	ln -s /usr/lib/systemd/user/pulseaudio.socket .
+  
+  #Set login manager
+  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SINST
+  if [[ $SINST == "Y" || $SINST == "y" ]]; then
+    install_software sddm
+    read -n1 -rep 'Would you like to enable SDDM autologin? (y,n)' SDDM
+    if [[ $SDDM == "Y" || $SDDM == "y" ]]; then
+      LOC="/etc/sddm.conf"
+      echo -e "The following has been added to $LOC.\n"
+      echo -e "[Autologin]\nUser = $(whoami)\nSession=hyprland" | sudo tee -a $LOC
+      echo -e "\n"
+      echo -e "Enabling SDDM service...\n"
+      sudo systemctl enable sddm
+      sleep 3
+    fi 
+  else
+    read -rep $'[\e[1;33mACTION\e[0m] - Would you like to autologin using a --user service? (y,n) ' AUTO
+    if [[ $AUTO == "Y" || $AUTO == "y" ]]; then  
+      cd /etc/systemd/system/getty.target.wants/getty@tty1.service            #sostituire linea 38 con --> ExecStart=-/sbin/agetty -a &(whoami) %I $TERM
+      cd /originfolder                                                        #non so come si fà e se si fà ma dovrei tornare alla cartella da cui viene eseguito lo script
+      cp hypr.service $HOME/.config/systemd/user/
+    fi
+  
+  #Ricing
+  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
+  if [[ $RICE == "Y" || $RICE == "y" ]]; then  
+    git clone https://github.com/sickmitch/dotfiles.git 
+    cp dotfiles/* $HOME/.config/ 
+    rm -rf dotfiles
 fi
 
-echo -en "Remember to setup systemd autologin!\n"
 
-echo -en "Visit https://github.com/abba23/spotify-adblock\n"
