@@ -266,9 +266,9 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
 
-  ##-------------------------------------------------------------------------------------------------------------------##
-	
-  #Set pulseaudio
+	##-------------------------------------------------------------------------------------------------------------------##
+
+	#Set pulseaudio
 	echo -en "$CNT - Configuering pulseaudio."
 	systemctl --user enable pulseaudio
 	sleep 2
@@ -278,35 +278,32 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	ln -s /usr/lib/systemd/user/pulseaudio.service .
 	cd $HOME/.config/systemd/user/sockets.target.wants/
 	ln -s /usr/lib/systemd/user/pulseaudio.socket .
-  
-  #Set login manager
-  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SINST
-  if [[ $SINST == "Y" || $SINST == "y" ]]; then
-    install_software sddm
-    read -n1 -rep 'Would you like to enable SDDM autologin? (y,n)' SDDM
-    if [[ $SDDM == "Y" || $SDDM == "y" ]]; then
-      LOC="/etc/sddm.conf"
-      echo -e "The following has been added to $LOC.\n"
-      echo -e "[Autologin]\nUser = $(whoami)\nSession=hyprland" | sudo tee -a $LOC
-      echo -e "\n"
-      echo -e "Enabling SDDM service...\n"
-      sudo systemctl enable sddm
-      sleep 3
-    fi 
-  else
-    read -rep $'[\e[1;33mACTION\e[0m] - Would you like to autologin using a --user service? (y,n) ' AUTO
-    if [[ $AUTO == "Y" || $AUTO == "y" ]]; then  
-      cd /etc/systemd/system/getty.target.wants/getty@tty1.service            #sostituire linea 38 con --> ExecStart=-/sbin/agetty -a &(whoami) %I $TERM
-      cd /originfolder                                                        #non so come si fà e se si fà ma dovrei tornare alla cartella da cui viene eseguito lo script
-      cp hypr.service $HOME/.config/systemd/user/
-    fi
-  
-  #Ricing
-  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
-  if [[ $RICE == "Y" || $RICE == "y" ]]; then  
-    git clone https://github.com/sickmitch/dotfiles.git 
-    cp dotfiles/* $HOME/.config/ 
-    rm -rf dotfiles
+	#Set login manager
+	read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SINST
+	if [[ $SINST == "Y" || $SINST == "y" ]]; then
+		install_software sddm
+		read -n1 -rep 'Would you like to enable SDDM autologin? (y,n)' SDDM
+		if [[ $SDDM == "Y" || $SDDM == "y" ]]; then
+			LOC="/etc/sddm.conf"
+			echo -e "The following has been added to $LOC.\n"
+			echo -e "[Autologin]\nUser = $(whoami)\nSession=hyprland" | sudo tee -a $LOC
+			echo -e "\n"
+			echo -e "Enabling SDDM service...\n"
+			sudo systemctl enable sddm
+			sleep 3
+		fi
+	else
+		#read -rep $'[\e[1;33mACTION\e[0m] - Would you like to autologin using a --user service? (y,n) ' AUTO
+		#if [[ $AUTO == "Y" || $AUTO == "y" ]]; then
+		#	cp hypr.service $HOME/.config/systemd/user/
+		#	sudo sed -i 's/-/sbin/agetty -o '-p -- \\u' --noclear - $TERM/-/sbin/agetty -a $(whoami) %I $TERM/' /etc/systemd/system/getty.target.wants/getty@tty1.service
+		#fi
+	fi
+	#Ricing
+	read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
+	if [[ $RICE == "Y" || $RICE == "y" ]]; then
+		git clone https://github.com/sickmitch/dotfiles.git
+		cp dotfiles/* $HOME/.config/
+		rm -rf dotfiles
+	fi
 fi
-
-
