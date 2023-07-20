@@ -270,14 +270,11 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	#Set pulseaudio
 	echo -en "$CNT - Configuering pulseaudio."
-	systemctl --user enable pulseaudio
-	sleep 2
-	systemctl --user enable pulseaudio.socket
-	sleep 2
-	cd $HOME/.config/systemd/user/default.target.wants/
-	ln -s /usr/lib/systemd/user/pulseaudio.service .
-	cd $HOME/.config/systemd/user/sockets.target.wants/
-	ln -s /usr/lib/systemd/user/pulseaudio.socket .
+	pkill pulseaudio
+	pulseaudio -D
+	sudo ln -s /usr/lib/systemd/user/pulseaudio.service $HOME/.config/systemd/user/default.target.wants/pulseaudio.service
+	sudo ln -s /usr/lib/systemd/user/pulseaudio.socket $HOME/.config/systemd/user/sockets.target.wants/pulseaudio.socket
+
 	#Set login manager
 	read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SINST
 	if [[ $SINST == "Y" || $SINST == "y" ]]; then
@@ -292,18 +289,13 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 			sudo systemctl enable sddm
 			sleep 3
 		fi
-	else
-		#read -rep $'[\e[1;33mACTION\e[0m] - Would you like to autologin using a --user service? (y,n) ' AUTO
-		#if [[ $AUTO == "Y" || $AUTO == "y" ]]; then
-		#	cp hypr.service $HOME/.config/systemd/user/
-		#	sudo sed -i 's/-/sbin/agetty -o '-p -- \\u' --noclear - $TERM/-/sbin/agetty -a $(whoami) %I $TERM/' /etc/systemd/system/getty.target.wants/getty@tty1.service
-		#fi
 	fi
 	#Ricing
 	read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
 	if [[ $RICE == "Y" || $RICE == "y" ]]; then
 		git clone https://github.com/sickmitch/dotfiles.git
-		cp dotfiles/* $HOME/.config/
+		mkdir -p $HOME/.config/test
+		cp -r dotfiles/* $HOME/.config/test
 		rm -rf dotfiles
 	fi
 fi
