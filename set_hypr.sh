@@ -304,8 +304,20 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 		rm -rf dotfiles
 	fi
 
+  #ad-block
+  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to set spotify ad-block? (y,n) ' SPOT
+  if [[ $SPOT == "Y" || $SPOT == "y" ]]; then 
+    git clone https://github.com/abba23/spotify-adblock.git &>>$INSTLOG
+	  cd spotify-adblock
+    make
+	  sudo make install &>>../$INSTLOG &
+    cd ..
+    rm -rf spotify-adblock
+    show_progress $!
+  fi
+
   #Bash Setup
-  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' BASH
+  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to set bash? (y,n) ' BASH
 	if [[ $BASH == "Y" || $BASH == "y" ]]; then 
     checkEnv(){
     ## Check if the current directory is writable.
