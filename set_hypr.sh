@@ -38,6 +38,7 @@ nvidia_stage=(
 #the main packages
 install_stage=(
 	hyprpaper
+	fuzzel
 	neofetch
 	swaylock-effects-git
 	tldr
@@ -70,6 +71,7 @@ install_stage=(
 	gvfs
 	thunar-archive-plugin
 	file-roller
+	ranger
 	starship
 	papirus-icon-theme
 	ttf-jetbrains-mono-nerd
