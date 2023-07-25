@@ -54,6 +54,7 @@ fi
 
 #ad-block
 if [[ $SPOT == "Y" || $SPOT == "y" ]]; then
+	sudo pacman -S --noconfirm rust
 	git clone https://github.com/abba23/spotify-adblock.git
 	cd spotify-adblock
 	make
