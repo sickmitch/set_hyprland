@@ -270,7 +270,8 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
 
-	echo -e "$CNT - The system is set, you can now continue yourself or you can run set_opt script to rice your installed system..."
+	echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...
+\e[0m"
 	##-------------------------------------------------------------------------------------------------------------------##
 #  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to continue setting up with this script or continue yourself? (y,n) ' CUST
 #	if [[ $CUST == "Y" || $CUST == "y" ]]; then
