@@ -1,7 +1,38 @@
 #!/bin/bash
 
+show_progress() {
+	while ps | grep $1 &>/dev/null; do
+		echo -n "."
+		sleep 2
+	done
+	echo -en "Done!\n"
+	sleep 2
+}
+
+install_software() {
+	# First lets see if the package is there
+	if yay -Q $1 &>>/dev/null; then
+		echo -e "$COK - $1 is already installed."
+	else
+		# no package found so installing
+		echo -en "$CNT - Now installing $1 ."
+		yay -S --noconfirm $1 &>>$INSTLOG &
+		show_progress $!
+		# test to make sure package installed
+		if yay -Q $1 &>>/dev/null; then
+			echo -e "\e[1A\e[K$COK - $1 was installed."
+		else
+			# if this is hit then a package is missing, exit to review log
+			echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
+			exit
+		fi
+	fi
+}
+
+clear
+
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to setup pulseaudio? (y,n) ' PULSE
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SDDM
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' PULSE
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install and set nvim? (y,n) ' NVIM
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to set spotify ad-block? (y,n) ' SPOT
@@ -12,6 +43,8 @@ if [[ $PULSE == "Y" || $PULSE == "y" ]]; then
 	echo -en "$CNT - Configuering pulseaudio."
 	pkill pulseaudio
 	pulseaudio -D
+	mkdir -p $HOME/.config/systemd/user/default.target.wants/
+	mkdir -p $HOME/.config/systemd/user/sockets.target.wants/
 	sudo ln -s /usr/lib/systemd/user/pulseaudio.service $HOME/.config/systemd/user/default.target.wants/pulseaudio.service
 	sudo ln -s /usr/lib/systemd/user/pulseaudio.socket $HOME/.config/systemd/user/sockets.target.wants/pulseaudio.socket
 fi
@@ -51,13 +84,12 @@ fi
 
 #ad-block
 if [[ $SPOT == "Y" || $SPOT == "y" ]]; then
-	git clone https://github.com/abba23/spotify-adblock.git &>>$INSTLOG
+	git clone https://github.com/abba23/spotify-adblock.git
 	cd spotify-adblock
 	make
-	sudo make install &>>../$INSTLOG &
+	sudo make install
 	cd ..
 	rm -rf spotify-adblock
-	show_progress $!
 fi
 
 #Bash Setup
@@ -93,7 +125,7 @@ if [[ $BASH == "Y" || $BASH == "y" ]]; then
 		yay -S ${DEPENDENCIES1}
 		yay -S ${DEPENDENCIES2}
 		yay -S ${DEPENDENCIES3}
-		sudo mkdir /usr/local/bin/autojump
+		sudo mkdir -r /usr/local/bin/autojump
 		sudo ln -s /etc/profile.d/autojump.sh /usr/share/autojump/autojump.sh
 	}
 	ìnstallStarship() {
