@@ -11,7 +11,6 @@ prep_stage=(
 	qt6ct
 	gtk3
 	polkit-gnome
-	pipewire
 	wireplumber
 	jq
 	gcc12
@@ -22,8 +21,11 @@ prep_stage=(
 	tlp
 	plocate
 	xorg-xhost
+	pipewire
+	pipewire-pulse
 	pulseaudio
 	pulseaudio-bluetooth
+	bluetooth-autoconnect
 )
 
 #software for nvidia GPU only
@@ -53,6 +55,7 @@ install_stage=(
 	grim
 	slurp
 	thunar
+	tumbler
 	popsicle-bin
 	btop
 	firefox
@@ -76,10 +79,11 @@ install_stage=(
 	papirus-icon-theme
 	ttf-jetbrains-mono-nerd
 	noto-fonts-emoji
-	xfce4-settings
+	qalculate-gtk-nognome
 	nwg-look-bin
 	vlc
 	bat
+	xournalpp
 	catppuccin-cursors-mocha
 	catppuccin-gtk-theme-mocha
 	papirus-folders-catppuccin-git
