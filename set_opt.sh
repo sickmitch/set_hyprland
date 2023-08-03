@@ -37,29 +37,39 @@ fi
 #Nvim lazyvim
 if [[ $NVIM == "Y" || $NVIM == "y" ]]; then
 	echo -n "Installing neovim....."
-	sudo pacman -S --noconfirm neovim ripgrep fd 1>/dev/null
+	sudo pacman -S --noconfirm neovim ripgrep fd &>>/dev/null
 	echo -n "Backing up....."
-	mv ~/.config/nvim ~/.config/nvim.bak 1>/dev/null
-	mv ~/.local/share/nvim ~/.local/share/nvim.bak 1>/dev/null
-	mv ~/.local/state/nvim ~/.local/state/nvim.bak 1>/dev/null
-	mv ~/.cache/nvim ~/.cache/nvim.bak 1>/dev/null
+	mv ~/.config/nvim ~/.config/nvim.bak &>>/dev/null
+	mv ~/.local/share/nvim ~/.local/share/nvim.bak &>>/dev/null
+	mv ~/.local/state/nvim ~/.local/state/nvim.bak &>>/dev/null
+	mv ~/.cache/nvim ~/.cache/nvim.bak &>>/dev/null
 	echo -n "Configuring...."
-	git clone https://github.com/LazyVim/starter ~/.config/nvim 1>/dev/null
+	git clone -b prima https://github.com/sickmitch/nvim.git ~/.config/nvim 2>dev/null
+	git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+ 		~/.local/share/nvim/site/pack/packer/start/packer.nvim 2>dev/null
 	echo -n "Cleaning...."
-	rm -rf ~/.config/nvim/.git 1>/dev/null
-	echo -e "Remember to run :checkhealth at first nvim start and follow errors\n"
+	rm -rf ~/.config/nvim/.git &>>/dev/null
+	rm -rf ~/.config/nvim/.gitignore &>>/dev/null
+	echo -n "Remember to run :checkhealth at first nvim start and follow errors"
+	echo -n "A big packer sync should be needed"
 fi
 
 #Ricing
 if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	echo -e "Ricing your hyprland install...."
 	git clone https://github.com/sickmitch/dotfiles.git 1>/dev/null
-	mkdir -p $HOME/.config 1>/dev/null
+	mkdir -p $HOME/.config/systemd/user 1>/dev/null
+	rm -rf dotfiles/.git dotfiles/.gitignore dotfiles/README.md 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
+	# cp -r check-battery.sh $HOME/.config/systemd/user 1>/dev/null
+	# cp -r check-battery-user.service $HOME/.config/systemd/user 1>/dev/null
+	# cp -r check-battery-user.timer $HOME/.config/systemd/user 1>/dev/null
+	systemctl --user enable check-battery-user.service
+	systemctl --user enable check-battery-user.timer
 	echo -e "Cleaning...."
-	rm -rf .git .gitignore README.md 1>/dev/null
+
 	rm -rf dotfiles 1>/dev/null
-	echo -e "Done!"
+	echo -e "Done!"  
 fi
 
 #ad-block

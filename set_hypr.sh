@@ -84,6 +84,7 @@ install_stage=(
 	vlc
 	bat
 	xournalpp
+	obsidian
 	catppuccin-cursors-mocha
 	catppuccin-gtk-theme-mocha
 	papirus-folders-catppuccin-git
