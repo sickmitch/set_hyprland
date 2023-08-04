@@ -2,9 +2,6 @@
 #
 #
 
-
-dir=${0%/*}
-
 sudo pacman -Syu --noconfirm 1>/dev/null
 clear
 
