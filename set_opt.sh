@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#
+
+
+dir=${0%/*}
 
 sudo pacman -Syu --noconfirm 1>/dev/null
 clear
@@ -34,7 +39,7 @@ if [[ $SDDM == "Y" || $SDDM == "y" ]]; then
 	echo "Done!"
 fi
 
-#Nvim lazyvim
+#Nvim
 if [[ $NVIM == "Y" || $NVIM == "y" ]]; then
 	echo -n "Installing neovim....."
 	sudo pacman -S --noconfirm neovim ripgrep fd &>>/dev/null
@@ -44,9 +49,10 @@ if [[ $NVIM == "Y" || $NVIM == "y" ]]; then
 	mv ~/.local/state/nvim ~/.local/state/nvim.bak &>>/dev/null
 	mv ~/.cache/nvim ~/.cache/nvim.bak &>>/dev/null
 	echo -n "Configuring...."
-	git clone -b prima https://github.com/sickmitch/nvim.git ~/.config/nvim 2>dev/null
+	mkdir -p ~/.config/nvim &>>dev/null
+	git clone -b prima https://github.com/sickmitch/nvim.git ~/.config/nvim &>>dev/null
 	git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- 		~/.local/share/nvim/site/pack/packer/start/packer.nvim 2>dev/null
+ 		~/.local/share/nvim/site/pack/packer/start/packer.nvim  &>>dev/null
 	echo -n "Cleaning...."
 	rm -rf ~/.config/nvim/.git &>>/dev/null
 	rm -rf ~/.config/nvim/.gitignore &>>/dev/null
@@ -61,13 +67,11 @@ if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	mkdir -p $HOME/.config/systemd/user 1>/dev/null
 	rm -rf dotfiles/.git dotfiles/.gitignore dotfiles/README.md 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
-	# cp -r check-battery.sh $HOME/.config/systemd/user 1>/dev/null
-	# cp -r check-battery-user.service $HOME/.config/systemd/user 1>/dev/null
-	# cp -r check-battery-user.timer $HOME/.config/systemd/user 1>/dev/null
-	systemctl --user enable check-battery-user.service
-	systemctl --user enable check-battery-user.timer
+	systemctl --user enable check-battery-user.service 1>/dev/null
+	systemctl --user enable check-battery-user.timer 1>/dev/null
 	echo -e "Cleaning...."
-
+	dir=${0%/*}
+	cd $dir
 	rm -rf dotfiles 1>/dev/null
 	echo -e "Done!"  
 fi
@@ -80,7 +84,8 @@ if [[ $SPOT == "Y" || $SPOT == "y" ]]; then
 	cd spotify-adblock 1>/dev/null
 	make 1>/dev/null
 	sudo make install 1>/dev/null
-	cd .. 1>/dev/null
+	dir=${0%/*}
+	cd $dir 1>/dev/null
 	rm -rf spotify-adblock 1>/dev/null
 	echo -e "Done!"
 fi
