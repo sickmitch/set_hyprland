@@ -1,8 +1,19 @@
 #!/bin/bash
 #
-#
 
-sudo pacman -Syu --noconfirm 1>/dev/null
+INSTLOG="install.log"
+
+show_progress() {
+	while ps | grep $1 &>/dev/null; do
+		echo -n "."
+		sleep 2
+	done
+	echo -en "Done!\n"
+	sleep 2
+}
+
+sudo touch /tmp/hyprv.tmp
+
 clear
 
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to setup pulseaudio? (y,n) ' PULSE
@@ -18,14 +29,15 @@ if [[ $PULSE == "Y" || $PULSE == "y" ]]; then
 	mkdir -p $HOME/.config/systemd/user/sockets.target.wants/ 1>/dev/null
 	sudo ln -s /usr/lib/systemd/user/pulseaudio.service $HOME/.config/systemd/user/default.target.wants/pulseaudio.service 1>/dev/null
 	sudo ln -s /usr/lib/systemd/user/pulseaudio.socket $HOME/.config/systemd/user/sockets.target.wants/pulseaudio.socket 1>/dev/null
-	pulseaudio -D 1>/dev/null
+	pulseaudio -D &>/dev/null
 	echo "Done!"
 fi
 
 #Set login manager
 if [[ $SDDM == "Y" || $SDDM == "y" ]]; then
 	echo -n "Configuring SDDM....."
-	sudo pacman -S --noconfirm sddm 1>/dev/null
+	sudo pacman -S --noconfirm sddm &>>$INSTLOG &
+	show_progress $!
 	LOC="/etc/sddm.conf"
 	echo -e "The following has been added to $LOC.\n"
 	echo -e "[Autologin]\nUser = $(whoami)\nSession=hyprland" | sudo tee -a $LOC
@@ -39,7 +51,8 @@ fi
 #Nvim
 if [[ $NVIM == "Y" || $NVIM == "y" ]]; then
 	echo -n "Installing neovim....."
-	sudo pacman -S --noconfirm neovim ripgrep fd &>>/dev/null
+	sudo pacman -S --noconfirm neovim ripgrep fd &>>$INSTLOG &
+	show_progress $!
 	echo -n "Backing up....."
 	mv ~/.config/nvim ~/.config/nvim.bak &>>/dev/null
 	mv ~/.local/share/nvim ~/.local/share/nvim.bak &>>/dev/null
@@ -47,6 +60,7 @@ if [[ $NVIM == "Y" || $NVIM == "y" ]]; then
 	mv ~/.cache/nvim ~/.cache/nvim.bak &>>/dev/null
 	echo -n "Configuring...."
 	mkdir -p ~/.config/nvim &>>dev/null
+	mkdir -p ~/.local/share/nvim/site/pack/packer/start &>>dev/null
 	git clone -b prima https://github.com/sickmitch/nvim.git ~/.config/nvim &>>dev/null
 	git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  		~/.local/share/nvim/site/pack/packer/start/packer.nvim  &>>dev/null
@@ -61,7 +75,7 @@ fi
 if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	echo -e "Ricing your hyprland install...."
 	git clone https://github.com/sickmitch/dotfiles.git 1>/dev/null
-	mkdir -p $HOME/.config/systemd/user 1>/dev/null
+	mkdir -p $HOME/.config/systemd/user &>/dev/null
 	rm -rf dotfiles/.git dotfiles/.gitignore dotfiles/README.md 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
 	systemctl --user enable check-battery-user.service 1>/dev/null
@@ -76,11 +90,11 @@ fi
 #ad-block
 if [[ $SPOT == "Y" || $SPOT == "y" ]]; then
 	echo -e "Getting spotify-adblock setted up...."
-	sudo pacman -S --noconfirm rust 1>/dev/null
+	sudo pacman -S --noconfirm rust & 1>&-
 	git clone https://github.com/abba23/spotify-adblock.git 1>/dev/null
 	cd spotify-adblock 1>/dev/null
 	make 1>/dev/null
-	sudo make install 1>/dev/null
+	sudo make install & 1>&- 2>>$INSTLOG
 	dir=${0%/*}
 	cd $dir 1>/dev/null
 	rm -rf spotify-adblock 1>/dev/null

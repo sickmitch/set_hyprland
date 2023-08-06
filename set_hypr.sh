@@ -39,6 +39,7 @@ nvidia_stage=(
 
 #the main packages
 install_stage=(
+	pypr
 	hyprpaper
 	fuzzel
 	neofetch
