@@ -26,6 +26,7 @@ prep_stage=(
 	pulseaudio
 	pulseaudio-bluetooth
 	bluetooth-autoconnect
+	acpi
 )
 
 #software for nvidia GPU only
@@ -39,7 +40,8 @@ nvidia_stage=(
 
 #the main packages
 install_stage=(
-	pypr
+	hyprpicker-git
+  pyprland
 	hyprpaper
 	fuzzel
 	neofetch
@@ -64,7 +66,6 @@ install_stage=(
 	pamixer
 	pavucontrol
 	telegram-desktop
-	sublime-text-4
 	spotify-launcher
 	brightnessctl
 	bluez

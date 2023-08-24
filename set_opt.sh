@@ -51,7 +51,7 @@ fi
 #Nvim
 if [[ $NVIM == "Y" || $NVIM == "y" ]]; then
 	echo -n "Installing neovim....."
-	sudo pacman -S --noconfirm neovim ripgrep fd &>>$INSTLOG &
+	sudo pacman -S --noconfirm neovim nodejs ripgrep fd &>>$INSTLOG &
 	show_progress $!
 	echo -n "Backing up....."
 	mv ~/.config/nvim ~/.config/nvim.bak &>>/dev/null
@@ -78,12 +78,14 @@ if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	mkdir -p $HOME/.config/systemd/user &>/dev/null
 	rm -rf dotfiles/.git dotfiles/.gitignore dotfiles/README.md 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
-	systemctl --user enable check-battery-user.service 1>/dev/null
-	systemctl --user enable check-battery-user.timer 1>/dev/null
+	systemctl --user enable check-battery-user.service
+	systemctl --user enable check-battery-user.timer
+	systemctl --user enable bluetooth-autoconnect.service
 	echo -e "Cleaning...."
 	dir=${0%/*}
 	cd $dir
 	rm -rf dotfiles 1>/dev/null
+
 	echo -e "Done!"  
 fi
 
