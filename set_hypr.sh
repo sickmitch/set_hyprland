@@ -22,7 +22,6 @@ prep_stage=(
 	plocate
 	xorg-xhost
 	pipewire
-	pipewire-pulse
 	pulseaudio
 	pulseaudio-bluetooth
 	bluetooth-autoconnect
@@ -278,14 +277,9 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Clean out other portals
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
+   
+  pulseaudio -D
 
-	echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...
+  echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...
 \e[0m"
 	##-------------------------------------------------------------------------------------------------------------------##
-#  read -rep $'[\e[1;33mACTION\e[0m] - Would you like to continue setting up with this script or continue yourself? (y,n) ' CUST
-#	if [[ $CUST == "Y" || $CUST == "y" ]]; then
-#    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-#    cd SCRIPT_DIR
-#    ./set_opt.sh
-#  fi
-fi
