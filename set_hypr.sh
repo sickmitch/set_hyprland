@@ -79,6 +79,7 @@ install_stage=(
 	ranger
 	starship
 	papirus-icon-theme
+  sublime-text-2
 	ttf-jetbrains-mono-nerd
 	noto-fonts-emoji
 	qalculate-gtk-nognome
@@ -274,11 +275,13 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Start the bluetooth service
 	echo -e "$CNT - Starting the Bluetooth Service..."
 	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+	sudo systemctl enable --now bluetooth-autoconnect.service &>>$INSTLOG
 	sleep 2
 
 	# Clean out other portals
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
+
   pulseaudio -D
   systemctl enable --now tlp.service
   echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...\e[0m"
