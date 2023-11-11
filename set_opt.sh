@@ -12,25 +12,52 @@ show_progress() {
 	sleep 2
 }
 
-sudo touch /tmp/hyprv.tmp
+# sudo touch /tmp/hyprv.tmp
 
 clear
 
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to setup pulseaudio? (y,n) ' PULSE
+# read -rep $'[\e[1;33mACTION\e[0m] - Would you like to setup pulseaudio? (y,n) ' PULSE
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to use secret-service? (y,n) ' SECRET
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SDDM
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install and set nvim? (y,n) ' NVIM
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to set spotify ad-block? (y,n) ' SPOT
 
 #Set pulseaudio
-if [[ $PULSE == "Y" || $PULSE == "y" ]]; then
-	echo -n "Configuring pulseaudio....."
-	mkdir -p $HOME/.config/systemd/user/default.target.wants/ 1>/dev/null
-	mkdir -p $HOME/.config/systemd/user/sockets.target.wants/ 1>/dev/null
-	sudo ln -s /usr/lib/systemd/user/pulseaudio.service $HOME/.config/systemd/user/default.target.wants/pulseaudio.service 1>/dev/null
-	sudo ln -s /usr/lib/systemd/user/pulseaudio.socket $HOME/.config/systemd/user/sockets.target.wants/pulseaudio.socket 1>/dev/null
-	pulseaudio -D &>/dev/null
-	echo "Done!"
+# if [[ $PULSE == "Y" || $PULSE == "y" ]]; then
+# 	echo -n "Configuring pulseaudio....."
+# 	mkdir -p $HOME/.config/systemd/user/default.target.wants/ 1>/dev/null
+# 	mkdir -p $HOME/.config/systemd/user/sockets.target.wants/ 1>/dev/null
+# 	sudo ln -s /usr/lib/systemd/user/pulseaudio.service $HOME/.config/systemd/user/default.target.wants/pulseaudio.service 1>/dev/null
+# 	sudo ln -s /usr/lib/systemd/user/pulseaudio.socket $HOME/.config/systemd/user/sockets.target.wants/pulseaudio.socket 1>/dev/null
+# 	pulseaudio -D &>/dev/null
+# 	echo "Done!"
+# fi
+
+if [[ $SECRET == "Y" || $SECRET == "y" ]]; then
+  echo "Configuring secret-service...."
+  if [ ! -d "/home/$USER/.config/systemd/user/" ]; then
+    mkdir -p /home/$USER/.config/systemd/user/
+  fi
+  NAME="/home/$USER/.config/systemd/user/secret-service.service"
+  echo "[Unit] " >> $NAME
+  echo "Description=Service to keep secrets of applications " >> $NAME
+  echo "Documentation=https://github.com/yousefvand/secret-service " >> $NAME
+  echo "[Install] " >> $NAME
+  echo "WantedBy=default.target " >> $NAME
+  echo "[Service] " >> $NAME
+  echo "Type=simple " >> $NAME
+  echo "RestartSec=30 " >> $NAME
+  echo "Restart=always " >> $NAME
+  echo "Environment="MASTERPASSWORD=0ZO53KsQvF2pSfd4qdrqaiULzPSBsLZO" " >> $NAME
+  echo "WorkingDirectory=%h " >> $NAME
+  echo "ExecStart=/usr/bin/secretserviced" >> $NAME
+  echo "Service file created"
+  echo -e "Installing secret-service\n"
+  yay -S secret-service-bin
+  echo "Enabling secret-service"
+  systemctl --user daemon-reload
+  systemctl enable --now --user secret-service.service
 fi
 
 #Set login manager
