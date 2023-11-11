@@ -65,7 +65,8 @@ install_stage=(
 	pamixer
 	pavucontrol
 	telegram-desktop
-	spotify-launcher
+	spotify
+  spicetify-cli
 	brightnessctl
 	bluez
 	bluez-utils
@@ -85,10 +86,11 @@ install_stage=(
 	vlc
 	bat
 	xournalpp
-	obsidian
 	catppuccin-cursors-mocha
 	catppuccin-gtk-theme-mocha
 	papirus-folders-catppuccin-git
+  logseq-desktop-bin
+  electronmail-bin
 )
 
 for str in ${myArray[@]}; do
@@ -277,9 +279,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Clean out other portals
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
-   
   pulseaudio -D
-
-  echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...
-\e[0m"
-	##-------------------------------------------------------------------------------------------------------------------##
+  systemctl enable --now tlp.service
+  echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...\e[0m"
+fi
