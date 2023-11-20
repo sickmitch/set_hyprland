@@ -105,14 +105,13 @@ if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	mkdir -p $HOME/.config/systemd/user &>/dev/null
 	rm -rf dotfiles/.git dotfiles/.gitignore dotfiles/README.md 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
-	systemctl --user enable check-battery-user.service
-	systemctl --user enable check-battery-user.timer
-	systemctl --user enable bluetooth-autoconnect.service
+	systemctl --user --now enable check-battery-user.service
+	systemctl --user --now enable check-battery-user.timer
+  sudo systemctl --now enable bluetooth-autoconnect.service
 	echo -e "Cleaning...."
 	dir=${0%/*}
 	cd $dir
 	rm -rf dotfiles 1>/dev/null
-
 	echo -e "Done!"  
 fi
 

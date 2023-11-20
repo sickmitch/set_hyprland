@@ -92,6 +92,7 @@ install_stage=(
 	papirus-folders-catppuccin-git
   logseq-desktop-bin
   electronmail-bin
+  secret-service-bin
 )
 
 for str in ${myArray[@]}; do
