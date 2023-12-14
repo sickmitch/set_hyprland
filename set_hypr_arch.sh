@@ -24,6 +24,7 @@ prep_stage=(
 	pipewire
 	pulseaudio
 	pulseaudio-bluetooth
+	pulseaudio-equalizer
 	bluetooth-autoconnect
 	acpi
 )
