@@ -27,6 +27,7 @@ prep_stage=(
 	pulseaudio-equalizer
 	bluetooth-autoconnect
 	acpi
+  ncdu
 )
 
 #software for nvidia GPU only
@@ -40,7 +41,7 @@ nvidia_stage=(
 
 #the main packages
 install_stage=(
-	hyprpicker-git
+	# hyprpicker-git
   pyprland
 	hyprpaper
 	fuzzel
@@ -50,7 +51,7 @@ install_stage=(
 	udiskie
 	kitty
 	dunst
-	waybar-hyprland-git
+	waybar
 	wlogout
 	webapp-manager
 	xdg-desktop-portal-hyprland
@@ -62,6 +63,7 @@ install_stage=(
 	popsicle-bin
 	btop
 	firefox
+  floorp-bin
 	mpv
 	pamixer
 	pavucontrol
@@ -83,7 +85,6 @@ install_stage=(
   sublime-text-2
 	ttf-jetbrains-mono-nerd
 	noto-fonts-emoji
-	qalculate-gtk-nognome
 	nwg-look-bin
 	vlc
 	bat
@@ -94,6 +95,7 @@ install_stage=(
   logseq-desktop-bin
   electronmail-bin
   secret-service-bin
+  vorta
 )
 
 for str in ${myArray[@]}; do
@@ -260,7 +262,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 		if yay -Q hyprland &>>/dev/null; then
 			yay -R --noconfirm hyprland &>>$INSTLOG &
 		fi
-		install_software hyprland-nvidia
+		install_software hyprland
 	else
 		install_software hyprland
 	fi
