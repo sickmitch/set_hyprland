@@ -28,6 +28,7 @@ prep_stage=(
 	bluetooth-autoconnect
 	acpi
   ncdu
+  xdg-autostart
 )
 
 #software for nvidia GPU only
