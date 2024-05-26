@@ -13,7 +13,6 @@ prep_stage=(
 	polkit-gnome
 	wireplumber
 	jq
-	gcc12
 	wl-clipboard
 	cliphist
 	python-requests
@@ -29,15 +28,7 @@ prep_stage=(
 	acpi
   ncdu
   xdg-autostart
-)
-
-#software for nvidia GPU only
-nvidia_stage=(
-	linux-headers
-	nvidia-dkms
-	nvidia-settings
-	libva
-	libva-nvidia-driver-git
+  wireless_tools
 )
 
 #the main packages
@@ -45,15 +36,20 @@ install_stage=(
 	# hyprpicker-git
   pyprland
 	hyprpaper
-	fuzzel
+  wofi
 	neofetch
 	swaylock-effects-git
 	tldr
 	udiskie
 	kitty
+  bash-completion
+  fzf
+  eza
+  zoxide
 	dunst
 	waybar
 	wlogout
+  tmux
 	webapp-manager
 	xdg-desktop-portal-hyprland
 	swappy
@@ -61,9 +57,7 @@ install_stage=(
 	slurp
 	thunar
 	tumbler
-	popsicle-bin
 	btop
-	firefox
   floorp-bin
 	mpv
 	pamixer
@@ -80,7 +74,6 @@ install_stage=(
 	gvfs
 	thunar-archive-plugin
 	file-roller
-	ranger
 	starship
 	papirus-icon-theme
   sublime-text-2
@@ -90,9 +83,9 @@ install_stage=(
 	vlc
 	bat
 	xournalpp
-	catppuccin-cursors-mocha
-	catppuccin-gtk-theme-mocha
-	papirus-folders-catppuccin-git
+	# catppuccin-cursors-mocha
+	# catppuccin-gtk-theme-mocha
+	# papirus-folders-catppuccin-git
   logseq-desktop-bin
   electronmail-bin
   secret-service-bin
@@ -183,13 +176,6 @@ else
 	exit
 fi
 
-# find the Nvidia GPU
-if lspci -k | grep -A 2 -E "(VGA|3D)" | grep -iq nvidia; then
-	ISNVIDIA=true
-else
-	ISNVIDIA=false
-fi
-
 ### Disable wifi powersave mode ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to disable WiFi powersave? (y,n) ' WIFI
 if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
@@ -213,6 +199,7 @@ fi
 #### Check for package manager ####
 if [ ! -f /sbin/yay ]; then
 	echo -en "$CNT - Configuering yay."
+  sudo pacman -S git
 	git clone https://aur.archlinux.org/yay.git &>>$INSTLOG
 	cd yay
 	makepkg -si --noconfirm &>>../$INSTLOG &
@@ -243,33 +230,9 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 		install_software $SOFTWR
 	done
 
-	# Setup Nvidia if it was found
-	if [[ "$ISNVIDIA" == true ]]; then
-		echo -e "$CNT - Nvidia GPU support setup stage, this may take a while..."
-		for SOFTWR in ${nvidia_stage[@]}; do
-			install_software $SOFTWR
-		done
-
-		# update config
-		sudo sed -i 's/MODULES=()/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
-		sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
-		echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>>$INSTLOG
-	fi
-
 	# Install the correct hyprland version
 	echo -e "$CNT - Installing Hyprland, this may take a while..."
-	if [[ "$ISNVIDIA" == true ]]; then
-		#check for hyprland and remove it so the -nvidia package can be installed
-		if yay -Q hyprland &>>/dev/null; then
-			yay -R --noconfirm hyprland &>>$INSTLOG &
-		fi
-		install_software hyprland
-	else
-		install_software hyprland
-	fi
-
-	#fix needed for waybar-hyprland
-	export CC=gcc-12 CXX=g++-12
+  install_software hyprland
 
 	# Stage 1 - main components
 	echo -e "$CNT - Installing main components, this may take a while..."

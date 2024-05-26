@@ -40,6 +40,7 @@ if [[ $SECRET == "Y" || $SECRET == "y" ]]; then
     mkdir -p /home/$USER/.config/systemd/user/
   fi
   NAME="/home/$USER/.config/systemd/user/secret-service.service"
+  rm $NAME
   echo "[Unit] " >> $NAME
   echo "Description=Service to keep secrets of applications " >> $NAME
   echo "Documentation=https://github.com/yousefvand/secret-service " >> $NAME
