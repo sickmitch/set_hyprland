@@ -11,7 +11,6 @@ prep_stage=(
 	qt6ct
 	gtk3
 	polkit-gnome
-	wireplumber
 	jq
 	wl-clipboard
 	cliphist
@@ -20,7 +19,6 @@ prep_stage=(
 	tlp
 	plocate
 	xorg-xhost
-	pipewire
 	pulseaudio
 	pulseaudio-bluetooth
 	pulseaudio-equalizer
@@ -33,7 +31,7 @@ prep_stage=(
 
 #the main packages
 install_stage=(
-	# hyprpicker-git
+	hyprpicker-git
   pyprland
 	hyprpaper
   wofi
@@ -62,6 +60,7 @@ install_stage=(
 	mpv
 	pamixer
 	pavucontrol
+  firefox
 	telegram-desktop
 	spotify
   spicetify-cli
@@ -69,12 +68,10 @@ install_stage=(
 	bluez
 	bluez-utils
 	blueman
-	autojump
 	network-manager-applet
 	gvfs
 	thunar-archive-plugin
 	file-roller
-	starship
 	papirus-icon-theme
   sublime-text-2
 	ttf-jetbrains-mono-nerd
@@ -83,9 +80,9 @@ install_stage=(
 	vlc
 	bat
 	xournalpp
-	# catppuccin-cursors-mocha
-	# catppuccin-gtk-theme-mocha
-	# papirus-folders-catppuccin-git
+	catppuccin-cursors-mocha
+	catppuccin-gtk-theme-mocha
+	papirus-folders-catppuccin-git
   logseq-desktop-bin
   electronmail-bin
   secret-service-bin
