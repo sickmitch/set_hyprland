@@ -66,6 +66,7 @@ install_stage=(
   spicetify-cli
 	brightnessctl
 	bluez
+  autojump
 	bluez-utils
 	blueman
 	network-manager-applet
@@ -80,7 +81,6 @@ install_stage=(
 	vlc
 	bat
 	xournalpp
-	catppuccin-cursors-mocha
 	catppuccin-gtk-theme-mocha
 	papirus-folders-catppuccin-git
   logseq-desktop-bin

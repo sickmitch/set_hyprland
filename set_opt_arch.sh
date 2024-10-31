@@ -16,23 +16,12 @@ show_progress() {
 
 clear
 
-# read -rep $'[\e[1;33mACTION\e[0m] - Would you like to setup pulseaudio? (y,n) ' PULSE
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to use secret-service? (y,n) ' SECRET
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install sddm as display manager? (y,n) ' SDDM
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install and set nvim? (y,n) ' NVIM
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to rice hyprland? (y,n) ' RICE
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to set spotify ad-block? (y,n) ' SPOT
 
-#Set pulseaudio
-# if [[ $PULSE == "Y" || $PULSE == "y" ]]; then
-# 	echo -n "Configuring pulseaudio....."
-# 	mkdir -p $HOME/.config/systemd/user/default.target.wants/ 1>/dev/null
-# 	mkdir -p $HOME/.config/systemd/user/sockets.target.wants/ 1>/dev/null
-# 	sudo ln -s /usr/lib/systemd/user/pulseaudio.service $HOME/.config/systemd/user/default.target.wants/pulseaudio.service 1>/dev/null
-# 	sudo ln -s /usr/lib/systemd/user/pulseaudio.socket $HOME/.config/systemd/user/sockets.target.wants/pulseaudio.socket 1>/dev/null
-# 	pulseaudio -D &>/dev/null
-# 	echo "Done!"
-# fi
 
 if [[ $SECRET == "Y" || $SECRET == "y" ]]; then
   echo "Configuring secret-service...."
@@ -103,15 +92,21 @@ fi
 if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	echo -e "Ricing your hyprland install...."
 	git clone https://github.com/sickmitch/dotfiles.git 1>/dev/null
+  git clone https://github.com/yeyushengfan258/Future-cursors.git 1>/dev/null
 	mkdir -p $HOME/.config/systemd/user &>/dev/null
-	rm -rf dotfiles/.git dotfiles/.gitignore dotfiles/README.md 1>/dev/null
+	rm -rf dotfiles/{.git,.gitignore,README.md} 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
+  cd Future-cursors && ./install.sh 1>/dev/null && sudo ./install.sh 1>/dev/null
 	systemctl --user --now enable check-battery-user.service
 	systemctl --user --now enable check-battery-user.timer
   sudo systemctl --now enable bluetooth-autoconnect.service
+  gsettings set org.gnome.desktop.interface gtk-theme catppuccin-mocha-blue-standard+default
+  gsettings set org.gnome.desktop.interface cursor-theme Future-cursors
+  nwg-look -a
 	echo -e "Cleaning...."
 	dir=${0%/*}
 	cd $dir
+  rm -rf Future-cursors 1>/dev/null
 	rm -rf dotfiles 1>/dev/null
 	echo -e "Done!"  
 fi
