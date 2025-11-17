@@ -19,20 +19,23 @@ prep_stage=(
 	tlp
 	plocate
 	xorg-xhost
-	pulseaudio
-	pulseaudio-bluetooth
-	pulseaudio-equalizer
-	bluetooth-autoconnect
 	acpi
   ncdu
   xdg-autostart
   wireless_tools
+  pipewire
+  pipewire-alsa
+  pipewire-pulse
+  pipewire-jack
+  wireplumber
+  bluez
+  bluez-utils
+	bluetooth-autoconnect
 )
 
 #the main packages
 install_stage=(
 	hyprpicker-git
-  pyprland
 	hyprpaper
   wofi
 	neofetch
@@ -60,7 +63,8 @@ install_stage=(
 	mpv
 	pamixer
 	pavucontrol
-  firefox
+  chromium
+  librewolf-bin
 	telegram-desktop
 	spotify
   spicetify-cli
@@ -69,24 +73,19 @@ install_stage=(
   autojump
 	bluez-utils
 	blueman
-	network-manager-applet
 	gvfs
 	thunar-archive-plugin
 	file-roller
-	papirus-icon-theme
   sublime-text-2
 	ttf-jetbrains-mono-nerd
 	noto-fonts-emoji
-	nwg-look-bin
 	vlc
 	bat
 	xournalpp
-	catppuccin-gtk-theme-mocha
-	papirus-folders-catppuccin-git
   logseq-desktop-bin
   electronmail-bin
   secret-service-bin
-  vorta
+  tmux
 )
 
 for str in ${myArray[@]}; do
@@ -247,7 +246,16 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	echo -e "$CNT - Cleaning out conflicting xdg portals..."
 	yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>>$INSTLOG
 
-  pulseaudio -D
-  systemctl enable --now tlp.service
+  # Prevent pulseaudio interference with pipewire
+  systemctl --user mask pulseaudio.service pulseaudio.socket
+  
+  # Turn on power savings in laptop chassis
+  if [[ $ISVM == *"laptop"* ]]; then
+    read -rep $'[\e[1;33mACTION\e[0m] - Would you like to enable power savings? (y,n) ' PWRSV
+    if [[ $PWRSV == "Y" || $PWRSV == "y" ]]; then
+      systemctl enable --now tlp.service
+    fi
+  fi
+
   echo -e $"\e[1;31mThe system is set, you can now continue yourself or you can run set_opt script to rice your installed system...\e[0m"
 fi

@@ -91,18 +91,21 @@ fi
 #Ricing
 if [[ $RICE == "Y" || $RICE == "y" ]]; then
 	echo -e "Ricing your hyprland install...."
+	yay -S catppuccin-gtk-theme-mocha numix-circle-icon-theme-git nwg-look --noconfirm 1>/dev/null
 	git clone https://github.com/sickmitch/dotfiles.git 1>/dev/null
   git clone https://github.com/yeyushengfan258/Future-cursors.git 1>/dev/null
 	mkdir -p $HOME/.config/systemd/user &>/dev/null
 	rm -rf dotfiles/{.git,.gitignore,README.md} 1>/dev/null
 	cp -r dotfiles/* $HOME/.config 1>/dev/null
   cd Future-cursors && ./install.sh 1>/dev/null && sudo ./install.sh 1>/dev/null
+  gsettings set org.gnome.desktop.interface cursor-size 32
+  gsettings set org.gnome.desktop.interface cursor-theme Future-Cyan-Hyprcursor_Theme
+  gsettings set org.gnome.desktop.interface icon-theme Numix-Circle
+  gsettings set org.gnome.desktop.interface gtk-theme catppuccin-mocha-blue-standard+default
+  nwg-look -a
 	systemctl --user --now enable check-battery-user.service
 	systemctl --user --now enable check-battery-user.timer
   sudo systemctl --now enable bluetooth-autoconnect.service
-  gsettings set org.gnome.desktop.interface gtk-theme catppuccin-mocha-blue-standard+default
-  gsettings set org.gnome.desktop.interface cursor-theme Future-cursors
-  nwg-look -a
 	echo -e "Cleaning...."
 	dir=${0%/*}
 	cd $dir
